@@ -1,1 +1,7 @@
-[{"id":1,"product_name":"малина","product_price":200,"product_amount":400},{"id":2,"product_name":"груша","product_price":15,"product_amount":70},{"id":3,"product_name":"банан","product_price":20,"product_amount":50}]
+[
+  { "id": 1, "product_name": "малина", "product_price": 430, "product_amount": 400 },
+  { "id": 2, "product_name": "груша", "product_price": 15, "product_amount": 70 },
+  { "id": 3, "product_name": "банан", "product_price": 20, "product_amount": 50 },
+  { "id": 4, "product_name": "апельсин", "product_price": 50, "product_amount": 200 },
+  { "id": 5, "product_name": "арбуз", "product_price": 50, "product_amount": 200 }
+]
