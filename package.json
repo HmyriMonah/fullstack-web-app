@@ -13,7 +13,7 @@
     "lint:js": "src/"
   },
   "scripts": {
-    "server": "node server/index.js",
+    "server": "nodemon server/index.js localhost 8080",
     "prebuild": "npm run lint:js && npm run lint:css",
     "build": "webpack",
     "watch": "npm-watch",
@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "babel-plugin-handlebars-inline-precompile": "^2.1.1",
+    "express": "^4.17.1",
     "hbs": "^4.1.1",
     "lodash.template": "^4.5.0",
     "npm-watch": "^0.7.0",

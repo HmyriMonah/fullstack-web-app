@@ -1,6 +1,29 @@
 const fs = require('fs');
 const path = require('path');
 
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+
+app.get('/products', (req, res) => {
+  res.json(getAllProducts(JSONfileName));
+});
+
+app.get("/product/:id", (req, res) => {
+  res.send(req.body);
+  const id=Number(req.params.id);
+  const send=String(id+2);
+  res.json(getProductById(JSONfileName, id));
+});
+
+app.listen(80, (err) => {
+  if (err) return console.log('something bad happened', err);
+  console.log('server is listening 80');
+});
+
+
 function getAllProducts(fileJSON) {
   return JSON.parse(
     fs.readFileSync(fileJSON, 'utf8', (err, data) => {
@@ -21,13 +44,18 @@ function getProductById(fileJSON, id) {
       }
     })
   );
-  return productsList[
-    productsList.findIndex((element, index, array) => {
+  if(productsList.findIndex((element, index, array) => {
       if (element.id === id) {
         return true;
       }
-    })
-  ];
+    })!==-1)
+  {return productsList[
+      productsList.findIndex((element, index, array) => {
+        if (element.id === id) {
+          return true;
+        }
+      })
+    ];}else return({error:"wrong id"});
 }
 
 function addNewProduct(fileJSON, newProductName, newProductPrice, newProductAmount) {
@@ -65,7 +93,7 @@ function deleteProduct(fileJSON, id) {
       return true;
     }
   });
-  if (deleteIndex !== (-1)){
+  if (deleteIndex !== -1) {
     productsList.splice(deleteIndex, 1);
     fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
       if (err) {
@@ -104,11 +132,12 @@ function updateProduct(fileJSON, newProductName, newProductPrice, newProductAmou
   });
 }
 
+
 const JSONfileName = path.resolve(__dirname, 'products.json');
 
-console.log(getAllProducts(JSONfileName));
-console.log('Вывод продукта по id \n', getProductById(JSONfileName, 2));
-addNewProduct(JSONfileName, 'арбуз', 50, 200);
-deleteProduct(JSONfileName, 2);
-updateProduct(JSONfileName, 'малина', 430, 400, 1);
-console.log(getAllProducts(JSONfileName));
+// console.log(getAllProducts(JSONfileName));
+//console.log('Вывод продукта по id \n', getProductById(JSONfileName, 2));
+// addNewProduct(JSONfileName, 'арбуз', 50, 200);
+// deleteProduct(JSONfileName, 2);
+// updateProduct(JSONfileName, 'малина', 430, 400, 1);
+// console.log(getAllProducts(JSONfileName));
