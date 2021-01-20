@@ -6,16 +6,24 @@ const app = express();
 
 app.use(express.json());
 
-
 app.get('/products', (req, res) => {
   res.json(getAllProducts(JSONfileName));
 });
 
-app.get("/product/:id", (req, res) => {
-  res.send(req.body);
-  const id=Number(req.params.id);
-  const send=String(id+2);
+app.get('/product/:id', (req, res) => {
+  const id = Number(req.params.id);
   res.json(getProductById(JSONfileName, id));
+});
+
+app.post('/product', (req, res) => {
+  let result = addNewProduct(JSONfileName, req.body);
+  res.send(result);
+});
+
+app.put('/product/:id', (req, res) => {
+  const id = Number(req.params.id);
+  let result = updateProduct(JSONfileName, id, req.body);
+  res.send(result);
 });
 
 app.listen(80, (err) => {
@@ -23,6 +31,7 @@ app.listen(80, (err) => {
   console.log('server is listening 80');
 });
 
+const addProduct = { id: 5, product_name: 'арбуз', product_price: 50, product_amount: 200 };
 
 function getAllProducts(fileJSON) {
   return JSON.parse(
@@ -44,21 +53,24 @@ function getProductById(fileJSON, id) {
       }
     })
   );
-  if(productsList.findIndex((element, index, array) => {
+  if (
+    productsList.findIndex((element, index, array) => {
       if (element.id === id) {
         return true;
       }
-    })!==-1)
-  {return productsList[
+    }) !== -1
+  ) {
+    return productsList[
       productsList.findIndex((element, index, array) => {
         if (element.id === id) {
           return true;
         }
       })
-    ];}else return({error:"wrong id"});
+    ];
+  } else return { error: 'wrong id' };
 }
 
-function addNewProduct(fileJSON, newProductName, newProductPrice, newProductAmount) {
+function addNewProduct(fileJSON, newProduct) {
   const productsList = JSON.parse(
     fs.readFileSync(fileJSON, 'utf8', (err, data) => {
       if (err) {
@@ -66,18 +78,14 @@ function addNewProduct(fileJSON, newProductName, newProductPrice, newProductAmou
       }
     })
   );
-  const lastId = productsList[productsList.length - 1].id;
-  productsList.push({
-    id: lastId + 1,
-    product_name: newProductName,
-    product_price: newProductPrice,
-    product_amount: newProductAmount,
-  });
+  productsList.push(newProduct);
   fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
     if (err) {
       console.error(err);
+      return { error: 'failed delete' };
     }
   });
+  return { result: 'ok' };
 }
 
 function deleteProduct(fileJSON, id) {
@@ -98,46 +106,54 @@ function deleteProduct(fileJSON, id) {
     fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
       if (err) {
         console.error(err);
+        return { error: 'failed delete' };
       }
     });
-    return true;
+    return { result: 'ok' };
   }
 }
 
-function updateProduct(fileJSON, newProductName, newProductPrice, newProductAmount, newId) {
-  let newProduct = {
-    id: newId,
-    product_name: newProductName,
-    product_price: newProductPrice,
-    product_amount: newProductAmount,
-  };
+function updateProduct(fileJSON, id, newProduct) {
   const productsList = JSON.parse(
     fs.readFileSync(fileJSON, 'utf8', (err, data) => {
       if (err) {
         console.error(err);
+        return { error: 'failed update' };
       }
     })
   );
-  productsList[
-    productsList.findIndex((element, index, array) => {
-      if (element.id === newId) {
-        return true;
+  let productindex = productsList.findIndex((element, index, array) => {
+    if (element.id === id) {
+      return true;
+    }
+  });
+  if (productindex !== -1) {
+    productsList[productindex] = newProduct;
+    fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
+      if (err) {
+        console.error(err);
+        return { error: 'failed update' };
       }
-    })
-  ] = newProduct;
+    });
+    return { result: 'ok' };
+  } else {
+    return { error: 'failed update' };
+  }
+  productsList[productindex] = newProduct;
   fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
     if (err) {
       console.error(err);
+      return { error: 'failed update' };
     }
   });
+  return { result: 'ok' };
 }
-
 
 const JSONfileName = path.resolve(__dirname, 'products.json');
 
 // console.log(getAllProducts(JSONfileName));
 //console.log('Вывод продукта по id \n', getProductById(JSONfileName, 2));
-// addNewProduct(JSONfileName, 'арбуз', 50, 200);
+//addNewProduct(JSONfileName,addProduct);
 // deleteProduct(JSONfileName, 2);
 // updateProduct(JSONfileName, 'малина', 430, 400, 1);
 // console.log(getAllProducts(JSONfileName));
