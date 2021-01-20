@@ -26,6 +26,13 @@ app.put('/product/:id', (req, res) => {
   res.send(result);
 });
 
+app.delete("/product/:id", (req, res) => {
+  const id = Number(req.params.id);
+  let result = deleteProduct(JSONfileName, id);
+  res.send(result);
+
+});
+
 app.listen(80, (err) => {
   if (err) return console.log('something bad happened', err);
   console.log('server is listening 80');
@@ -111,6 +118,7 @@ function deleteProduct(fileJSON, id) {
     });
     return { result: 'ok' };
   }
+  return { error: 'failed delete' };
 }
 
 function updateProduct(fileJSON, id, newProduct) {
