@@ -4,6 +4,8 @@ const path = require('path');
 const express = require('express');
 const app = express();
 
+const JSONfileName = path.resolve(__dirname, 'products.json');
+
 app.use(express.json());
 
 app.get('/products', (req, res) => {
@@ -26,11 +28,10 @@ app.put('/product/:id', (req, res) => {
   res.send(result);
 });
 
-app.delete("/product/:id", (req, res) => {
+app.delete('/product/:id', (req, res) => {
   const id = Number(req.params.id);
   let result = deleteProduct(JSONfileName, id);
   res.send(result);
-
 });
 
 app.listen(80, (err) => {
@@ -38,28 +39,34 @@ app.listen(80, (err) => {
   console.log('server is listening 80');
 });
 
-const addProduct = { id: 5, product_name: 'арбуз', product_price: 50, product_amount: 200 };
-
 function getAllProducts(fileJSON) {
-  return JSON.parse(
-    fs.readFileSync(fileJSON, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    })
-  );
+  try {
+    return JSON.parse(
+      fs.readFileSync(fileJSON, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+          return false;
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function getProductById(fileJSON, id) {
-  const productsList = JSON.parse(
-    fs.readFileSync(fileJSON, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    })
-  );
+  let productsList;
+  try {
+     productsList = JSON.parse(
+      fs.readFileSync(fileJSON, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
   if (
     productsList.findIndex((element, index, array) => {
       if (element.id === id) {
@@ -78,13 +85,18 @@ function getProductById(fileJSON, id) {
 }
 
 function addNewProduct(fileJSON, newProduct) {
-  const productsList = JSON.parse(
-    fs.readFileSync(fileJSON, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-      }
-    })
-  );
+  let productsList;
+  try {
+     productsList = JSON.parse(
+      fs.readFileSync(fileJSON, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
   productsList.push(newProduct);
   fs.writeFileSync(fileJSON, JSON.stringify(productsList), (err) => {
     if (err) {
@@ -96,13 +108,18 @@ function addNewProduct(fileJSON, newProduct) {
 }
 
 function deleteProduct(fileJSON, id) {
-  const productsList = JSON.parse(
-    fs.readFileSync(fileJSON, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-      }
-    })
-  );
+  let productsList;
+  try {
+     productsList = JSON.parse(
+      fs.readFileSync(fileJSON, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
   let deleteIndex = productsList.findIndex((element, index, array) => {
     if (element.id === id) {
       return true;
@@ -122,14 +139,18 @@ function deleteProduct(fileJSON, id) {
 }
 
 function updateProduct(fileJSON, id, newProduct) {
-  const productsList = JSON.parse(
-    fs.readFileSync(fileJSON, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err);
-        return { error: 'failed update' };
-      }
-    })
-  );
+  let productsList;
+  try {
+     productsList = JSON.parse(
+      fs.readFileSync(fileJSON, 'utf8', (err, data) => {
+        if (err) {
+          console.error(err);
+        }
+      })
+    );
+  } catch (err) {
+    console.log(err);
+  }
   let productindex = productsList.findIndex((element, index, array) => {
     if (element.id === id) {
       return true;
@@ -157,11 +178,3 @@ function updateProduct(fileJSON, id, newProduct) {
   return { result: 'ok' };
 }
 
-const JSONfileName = path.resolve(__dirname, 'products.json');
-
-// console.log(getAllProducts(JSONfileName));
-//console.log('Вывод продукта по id \n', getProductById(JSONfileName, 2));
-//addNewProduct(JSONfileName,addProduct);
-// deleteProduct(JSONfileName, 2);
-// updateProduct(JSONfileName, 'малина', 430, 400, 1);
-// console.log(getAllProducts(JSONfileName));
