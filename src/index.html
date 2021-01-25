@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>fullstack</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://twitter.github.io/typeahead.js/js/handlebars.js"></script>
+    <script id="store-template" type="text/x-handlebars-template">
+      <tr>
+        <th class='table-column-name'>
+          Наименование товара
+        </th>
+        <th class='table-column-name'>
+          Количество
+        </th>
+        <th class='table-column-name'>
+          Цена за ед.
+        </th>
+        <th class='table-column-name'>
+          Стоимость.
+        </th>
+      </tr>
+      {{#each productsList}}
+        <tr>
+          <td class='table-column'>
+            <input
+              type='text'
+              class='{{id}} table-column__input-name table-column__input inputs'
+              value='{{product_name}}'
+              readonly
+            />
+          </td>
+          <td class='table-column'>
+            <input
+              type='text'
+              class='{{id}} table-column__input-count table-column__input inputs'
+              value='{{product_amount}}'
+              readonly
+            />
+          </td>
+          <td class='table-column'>
+            <input
+              type='text'
+              class='{{id}} table-column__input-priceForOne table-column__input inputs'
+              value='{{product_price}}'
+              readonly
+            />
+          </td>
+          <td class='table-column'>
+            {{priceTotal}}
+          </td>
+          <td>
+            <button class='button-edit buttons' id='edit-{{id}}'>
+              edit
+            </button>
+          </td>
+          <td>
+            <button class='button-delete buttons' id='delete-{{id}}'>
+              delete
+            </button>
+          </td>
+        </tr>
+      {{/each}}
+      <tr>
+        <td colspan='3' class='result table-column'>
+          ИТОГ:
+        </td>
+        <td class='table-column' id='resultCount'>
+          {{resultTotal}}
+        </td>
+        <td class='products__element' colspan='2'>
+          <button class='button-add buttons'>
+            Add product
+          </button>
+        </td>
+      </tr>
+    </script>
+    <table id="result-table" class="result-table" cellspacing="1" cellpadding="2"></table>
+
+    <div class="form form--add">
+      <div class="form-content">
+        <span class="form-close">&times;</span>
+        <h2>Add product</h2>
+        <form class="add-product">
+          <label for="name">Name:</label>
+          <input type="text" name="name" class="add-product-name" required />
+          <label for="amount">Amount:</label>
+          <input type="text" name="amount" class="add-product-amount" required />
+          <label for="price">Price:</label>
+          <input type="text" name="price" class="add-product-price" required />
+          <button>Add product</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="form form--edit">
+      <div class="form-content">
+        <span class="form-close">&times;</span>
+        <h2>Edit product</h2>
+        <form class="edit-product">
+          <label for="name">Name:</label>
+          <input type="text" name="name" class="edit-product-name" required />
+          <label for="amount">Amount:</label>
+          <input type="text" name="amount" class="edit-product-amount" required />
+          <label for="price">Price:</label>
+          <input type="text" name="price" class="edit-product-price" required />
+          <input type="hidden" name="id" class="edit-product-id" />
+          <button>Edit product</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

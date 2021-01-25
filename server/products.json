@@ -1,8 +1,1 @@
-[
-  { "id": 1, "product_name": "малина", "product_price": 400 },
-  { "id": 2, "product_name": "авакадо", "product_price": 50, "product_amount": 200 },
-  { "id": 3, "product_name": "банан", "product_price": 20, "product_amount": 50 },
-  { "id": 4, "product_name": "авакадо", "product_price": 50, "product_amount": 200 },
-  { "id": 5, "product_name": "авакадо", "product_price": 50, "product_amount": 200 },
-  { "id": 6, "product_name": "авакадо", "product_price": 50, "product_amount": 200 }
-]
+[{"id":1,"product_name":"яблоко","product_amount":"500","product_price":"30"},{"id":2,"product_name":"банан","product_price":20,"product_amount":50},{"id":3,"product_name":"авакадо","product_price":50,"product_amount":200},{"id":4,"product_name":"малина","product_amount":"230","product_price":"56"},{"id":5,"product_name":"авакадо","product_amount":"201","product_price":"50"}]
